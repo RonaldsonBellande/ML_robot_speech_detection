@@ -9,14 +9,11 @@ class speech_training(speech_building):
         self.epochs = [1, 5, 15, 50, 100, 200]
         self.param_grid = dict(batch_size = self.batch_size, epochs = self.epochs)
         self.callbacks = keras.callbacks.EarlyStopping(monitor='val_acc', patience=4, verbose=1)
-         
         self.earlyStop = EarlyStopping(patience=2)
         self.learining_rate_reduction = ReduceLROnPlateau(monitor='val_accuracy',patience=2,verbose=1,factor= 0.5,min_lr=0.00001)
-        
         self.callbacks_2 = self.earlyStop, self.learining_rate_reduction
         
         self.model_type = model_type
-        # Train
         self.train_model()
         self.evaluate_model()
         self.plot_model()
@@ -24,12 +21,10 @@ class speech_training(speech_building):
         
 
 
-    #  Training model 
     def train_model(self):
        
         grid = GridSearchCV(estimator = self.model, param_grid = self.param_grid, n_jobs = 1, cv = 3, verbose = 10)
         
-        # Determine where the training time starts
         start = "starting --: "
         self.get_training_time(start)
 
@@ -40,14 +35,12 @@ class speech_training(speech_building):
                 callbacks=[self.callbacks_2],
                 shuffle=True)
 
-        # Determine when the training time ends
         start = "ending --: " 
         self.get_training_time(start)
         
         self.model.save_weights("models/" + self.model_type + "_speech_categories_"+ str(self.number_classes)+"_model.h5")
    
 
-    # Evaluate model
     def evaluate_model(self):
         evaluation = self.model.evaluate(self.X_test, self.Y_test_vec, verbose=1)
 
@@ -60,10 +53,8 @@ class speech_training(speech_building):
 
 
 
-    # PLotting model
     def plot_model(self):
 
-        # Computer Vision modeling
         plt.plot(self.speech_model.history['accuracy'])
         plt.plot(self.speech_model.history['val_accuracy'])
         plt.title('model accuracy')
@@ -91,13 +82,11 @@ class speech_training(speech_building):
         for i in range(16):
             plt.subplot(4,4,i+1)
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.model_categories[predicted_classes[i]] ) + "\n Actual - {}".format(self.model_categories[int(self.Y_test_vec[i,0])] ),fontsize=1)
+            plt.title("Predicted - {}".format(self.category_names[predicted_classes[i]] ) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])] ),fontsize=1)
             plt.tight_layout()
             plt.savefig("graph_charts/" + self.model_type + '_prediction' + str(self.number_classes) + '.png', dpi =500)
 
 
-
-    # Record time for the training
     def get_training_time(self, start):
 
         date_and_time = datetime.datetime.now()

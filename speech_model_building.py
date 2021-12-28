@@ -4,23 +4,21 @@ class speech_building(object):
     def __init__(self, model_type):
 
         self.label_name = []
-        self.number_classes = 3
         self.path  = "voice_data/"
+        self.true_path = self.path
         self.channel = 1
         self.max_length = 7340 
         self.number_mfcc = 2121
-        self.mfcc_vectors = np.empty([self.number_mfcc, 128, 44]) 
+        self.mfcc_vectors = [] 
 
-
+        self.labelencoder = LabelEncoder()
         self.valid_sound = [".wav"]
         self.model = None
 
         self.model_summary = "model_summary/"
         self.optimizer = tf.keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
         self.create_model_type = model_type
-        self.categories = ["bed", "happy", "cat"]
         
-        self.model_categories = self.categories
         self.data_to_array_label_sound()
         self.splitting_data_normalize()
 
@@ -40,23 +38,25 @@ class speech_building(object):
 
 
     def data_to_array_label_sound(self):
-
-        for label in self.categories:
+        
+        self.category_names =  os.listdir(self.true_path)
+        folder = next(os.walk(self.true_path))[1]
+        self.number_classes = len(folder)
+        
+        for label in self.category_names:
             self.wav_files = [self.path + label + '/' + i for i in os.listdir(self.path + '/' + label)]
 
             for wavfile in self.wav_files:
                 wave, sr = librosa.load(wavfile)
                 mfcc = librosa.feature.mfcc(wave, sr=sr, n_mfcc=self.number_mfcc)
-                np.append(self.mfcc_vectors, mfcc)
+                self.mfcc_vectors.append(mfcc)
+                self.label_name.append(label)
 
-                if label == "bed":
-                    self.label_name.append(0)
-                elif label == "happy":
-                    self.label_name.append(1)
-                elif label == "cat":
-                    self.label_name.append(2)
-        
-        
+        self.label_name = self.labelencoder.fit_transform(self.label_name)
+        self.mfcc_vectors = np.array(self.mfcc_vectors)
+        self.label_name = np.array(self.label_name)
+        self.label_name = self.label_name.reshape((len(self.mfcc_vectors),1)) 
+
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
         else:

@@ -32,11 +32,15 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC 
 from sklearn.ensemble import RandomForestClassifier
 import keras
+import keras.backend as K
+import keras.layers as KL
+import keras.engine as KE
+import keras.models as KM
 
 from mrcnn import utils, visualize
-import mrcnn.model as modellib
+# import mrcnn.model as modellib
 from mrcnn.config import Config
-from mrcnn import model as modellib, utils
+# from mrcnn import model as modellib, utils
 
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
@@ -57,7 +61,15 @@ from contextlib import redirect_stdout
 from multiprocessing import Pool
 warnings.filterwarnings('ignore')
 plt.style.use('ggplot')
+from tensorflow.python.client import device_lib
 
+device_name = [x.name for x in device_lib.list_local_devices() if x.device_type == 'GPU']
+if device_name[0] == "/device:GPU:0":
+    device_name = device_name[0]
+    print("GPU")
+else:
+    device_name = device_name[0]
+    print("CPU")
 
 from speech_model_building import *
 from speech_model_training import *
