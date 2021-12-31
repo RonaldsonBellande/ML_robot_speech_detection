@@ -1,17 +1,17 @@
 # Copyright © 2021 Ronaldson Bellande
 from __future__ import print_function
-import cv2, sys, math, random, warnings, os, os.path, json, pydicom, glob, shutil, datetime
+import cv2, sys, math, random, warnings, os, os.path, json, pydicom, glob, shutil, datetime, zipfile, urllib.request, keras,  tensorflow as tf, time
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
 from os.path import basename
-from PIL import Image
+from PIL import Image, ImageDraw
 from tensorflow import keras
-import tensorflow as tf
-
 from imgaug import augmenters as iaa
 from tqdm import tqdm
+from random import randint
+import trimesh
 import librosa
 
 from os import listdir
@@ -31,29 +31,31 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC 
 from sklearn.ensemble import RandomForestClassifier
-import keras
-import keras.backend as K
-import keras.layers as KL
-import keras.engine as KE
-import keras.models as KM
 
 from mrcnn import utils, visualize
 # import mrcnn.model as modellib
 from mrcnn.config import Config
 # from mrcnn import model as modellib, utils
+from mrcnn.visualize import display_images, display_instances
+# from mrcnn.model import log
 
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 from pycocotools import mask as maskUtils
-import zipfile
-import urllib.request
+from tensorflow.keras import Model
+
+from tensorflow import convert_to_tensor
+from tensorflow.keras.applications.imagenet_utils import preprocess_input, decode_predictions
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras import layers
+from tensorflow.keras.applications import EfficientNetB0
 
 from keras.datasets import cifar10
 import keras.backend as K
 from keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Conv2D, Flatten, Dense, MaxPooling2D, Dropout, Activation, LSTM
-from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from tensorflow.keras.layers import Conv2D, Flatten, Dense, MaxPooling2D, Dropout, Activation
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard, ModelCheckpoint
 from tensorflow.keras.utils import to_categorical
 import matplotlib.image as img
 
@@ -64,11 +66,12 @@ plt.style.use('ggplot')
 from tensorflow.python.client import device_lib
 
 device_name = [x.name for x in device_lib.list_local_devices() if x.device_type == 'GPU']
-if device_name[0] == "/device:GPU:0":
-    device_name = device_name[0]
+
+if device_name != []:
+    device_name = "/device:CPU:0"
     print("GPU")
 else:
-    device_name = device_name[0]
+    device_name = "/device:CPU:0"
     print("CPU")
 
 from speech_model_building import *

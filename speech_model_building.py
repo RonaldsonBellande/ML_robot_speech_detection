@@ -4,13 +4,13 @@ class speech_building(object):
     def __init__(self, model_type):
 
         self.label_name = []
+        self.mfcc_vectors = [] 
         self.path  = "voice_data/"
         self.true_path = self.path
         self.channel = 1
-        self.max_length = 7340 
-        self.number_mfcc = 2121
-        self.mfcc_vectors = [] 
-
+        self.number_mfcc = 22050 
+        self.mfcc_vectors = np.empty([320, 120, 100]) 
+        
         self.labelencoder = LabelEncoder()
         self.valid_sound = [".wav"]
         self.model = None
@@ -49,19 +49,16 @@ class speech_building(object):
             for wavfile in self.wav_files:
                 wave, sr = librosa.load(wavfile)
                 mfcc = librosa.feature.mfcc(wave, sr=sr, n_mfcc=self.number_mfcc)
-                self.mfcc_vectors.append(mfcc)
+                np.append(self.mfcc_vectors, mfcc)
                 self.label_name.append(label)
 
-        self.label_name = self.labelencoder.fit_transform(self.label_name)
-        self.mfcc_vectors = np.array(self.mfcc_vectors)
-        self.label_name = np.array(self.label_name)
-        self.label_name = self.label_name.reshape((len(self.mfcc_vectors),1)) 
 
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
         else:
-            self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2], 1)
+            self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2], self.channel)
 
+        self.label_name = self.labelencoder.fit_transform(self.label_name)
         self.label_name = np.array(self.label_name)
         self.label_name = tf.keras.utils.to_categorical(self.label_name , num_classes=self.number_classes)
 
@@ -70,7 +67,6 @@ class speech_building(object):
     def splitting_data_normalize(self):
         
         self.X_train, self.X_test, self.Y_train_vec, self.Y_test_vec = train_test_split(self.mfcc_vectors, self.label_name, test_size = 0.1, random_state=42)
-        
         self.input_shape = self.X_train.shape[1:]
         self.Y_train = tf.keras.utils.to_categorical(self.Y_train_vec, self.number_classes)
         self.Y_test = tf.keras.utils.to_categorical(self.Y_test_vec, self.number_classes)
@@ -79,13 +75,10 @@ class speech_building(object):
     def create_models_1(self):
         
         self.model = Sequential()
-
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
-
         self.model.add(Flatten())
         self.model.add(Dense(self.number_classes, activation='softmax'))
-
         self.model.compile(loss = 'binary_crossentropy', optimizer ='adam', metrics= ['accuracy'])
 
         return self.model
@@ -94,24 +87,18 @@ class speech_building(object):
     def create_models_2(self):
 
         self.model = Sequential()
-
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu"))
-
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(rate=0.25))
-
         self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
         self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
-
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(rate=0.25))
         self.model.add(Flatten())
-
         self.model.add(Dense(512, activation="relu"))
         self.model.add(Dropout(rate=0.5))
         self.model.add(Dense(units = self.number_classes, activation="softmax"))
-        
         self.model.compile(loss = 'binary_crossentropy', optimizer ='adam', metrics= ['accuracy'])
 	
         return self.model
@@ -120,15 +107,12 @@ class speech_building(object):
     def create_model_3(self):
 
         self.model = Sequential()
-        
         self.MyConv(first = True)
         self.MyConv()
         self.MyConv()
         self.MyConv()
-
         self.model.add(Flatten())
         self.model.add(Dense(units = self.number_classes, activation = "softmax", input_dim=2))
-
         self.model.compile(loss = "binary_crossentropy", optimizer ="adam", metrics= ["accuracy"])
         
         return self.model
@@ -144,7 +128,6 @@ class speech_building(object):
     
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.5))
-
         self.model.add(Conv2D(filters=32, kernel_size = (4, 4),strides = (1,1),padding="same"))
         self.model.add(Activation("relu"))
         self.model.add(Dropout(0.25))
@@ -154,7 +137,6 @@ class speech_building(object):
     def create_models_4(self):
         
         self.model = Sequential()
-
         self.model.add(LSTM(16, input_shape = self.input_shape, activation="sigmoid"))
         self.model.add(Dense(1, activation='sigmoid'))
         self.model.add(Dense(self.number_classes, activation='softmax'))
