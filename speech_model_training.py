@@ -21,7 +21,6 @@ class speech_training(speech_building):
         self.plot_random_examples()
         
 
-
     def train_model(self):
        
         grid = GridSearchCV(estimator = self.model, param_grid = self.param_grid, n_jobs = 1, cv = 3, verbose = 10)
@@ -75,12 +74,12 @@ class speech_training(speech_building):
     def plot_random_examples(self):
 
         plt.figure( dpi=256)
-        predicted_classes = self.model.predict_classes(self.X_test)
+        predicted_classes = self.model.predict(self.X_test)
 
         for i in range(16):
             plt.subplot(4,4,i+1)
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.category_names[predicted_classes[i]] ) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])] ),fontsize=1)
+            plt.title("Predicted - {}".format(self.category_names[int(predicted_classes[i])]) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])]),fontsize=1)
             plt.tight_layout()
             plt.savefig(self.graph_path + self.model_type + '_prediction' + str(self.number_classes) + '.png', dpi =500)
 

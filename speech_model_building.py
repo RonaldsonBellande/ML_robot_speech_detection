@@ -124,7 +124,7 @@ class speech_building(object):
         if first == False:
             self.model.add(Conv2D(filters=64, kernel_size=(4, 4),strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
         else:
-            self.model.add(Conv2D(64,(4, 4),strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
+            self.model.add(Conv2D(64,(4, 4), strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
     
         self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.5))

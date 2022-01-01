@@ -14,6 +14,7 @@ from random import randint
 import trimesh
 import librosa
 
+import nvidia_smi
 from os import listdir
 from xml.etree import ElementTree
 from matplotlib import pyplot
@@ -54,7 +55,7 @@ from keras.datasets import cifar10
 import keras.backend as K
 from keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Conv2D, Flatten, Dense, MaxPooling2D, Dropout, Activation
+from tensorflow.keras.layers import Conv2D, Flatten, Dense, MaxPooling2D, Dropout, Activation, LSTM
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard, ModelCheckpoint
 from tensorflow.keras.utils import to_categorical
 import matplotlib.image as img
@@ -63,12 +64,19 @@ from contextlib import redirect_stdout
 from multiprocessing import Pool
 warnings.filterwarnings('ignore')
 plt.style.use('ggplot')
-from tensorflow.python.client import device_lib
 
+nvidia_smi.nvmlInit()
+handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
+info = nvidia_smi.nvmlDeviceGetMemoryInfo(handle)
+
+if info.free < 964157696:
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+from tensorflow.python.client import device_lib
 device_name = [x.name for x in device_lib.list_local_devices() if x.device_type == 'GPU']
 
 if device_name != []:
-    device_name = "/device:CPU:0"
+    device_name = "/device:GPU:0"
     print("GPU")
 else:
     device_name = "/device:CPU:0"
