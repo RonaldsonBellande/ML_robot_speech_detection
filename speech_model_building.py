@@ -76,7 +76,6 @@ class speech_building(object):
         
         self.model = Sequential()
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Flatten())
         self.model.add(Dense(self.number_classes, activation='softmax'))
         self.model.compile(loss = 'binary_crossentropy', optimizer ='adam', metrics= ['accuracy'])
@@ -89,11 +88,9 @@ class speech_building(object):
         self.model = Sequential()
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
         self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu"))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(rate=0.25))
         self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
         self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(rate=0.25))
         self.model.add(Flatten())
         self.model.add(Dense(512, activation="relu"))
@@ -126,7 +123,6 @@ class speech_building(object):
         else:
             self.model.add(Conv2D(64,(4, 4), strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
     
-        self.model.add(MaxPooling2D(pool_size=(2, 2)))
         self.model.add(Dropout(0.5))
         self.model.add(Conv2D(filters=32, kernel_size = (4, 4),strides = (1,1),padding="same"))
         self.model.add(Activation("relu"))
