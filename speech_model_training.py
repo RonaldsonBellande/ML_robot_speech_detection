@@ -79,7 +79,7 @@ class speech_training(speech_building):
         for i in range(16):
             plt.subplot(4,4,i+1)
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.category_names[int(predicted_classes[i])]) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])]),fontsize=1)
+            plt.title("Predicted - {}".format(self.category_names[np.argmax(predicted_classes, axis=1)]) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])]),fontsize=1)
             plt.tight_layout()
             plt.savefig(self.graph_path + self.model_type + '_prediction' + str(self.number_classes) + '.png', dpi =500)
 
