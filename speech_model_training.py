@@ -6,6 +6,7 @@ class speech_training(speech_building):
         super().__init__(model_type)
         
         self.model_type = model_type
+        self.number_images_to_plot = 25
         self.batch_size = [10, 20, 40, 60, 80, 100]
         self.epochs = [1, 5, 15, 50, 100, 200]
         self.graph_path = "graph_charts/"
@@ -30,7 +31,7 @@ class speech_training(speech_building):
         self.speech_model = self.model.fit(self.X_train, self.Y_train_vec,
                 batch_size=self.batch_size[2],
                 validation_split=0.10,
-                epochs=self.epochs[3],
+                epochs=self.epochs[0],
                 callbacks=[self.callback_1, self.callback_2, self.callback_3],
                 shuffle=True)
 
@@ -75,11 +76,11 @@ class speech_training(speech_building):
 
         plt.figure( dpi=256)
         predicted_classes = self.model.predict(self.X_test)
-
-        for i in range(16):
-            plt.subplot(4,4,i+1)
+        
+        for i in range(self.number_images_to_plot):
+            plt.subplot(5,5,i+1)
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.category_names[np.argmax(predicted_classes, axis=1)]) + "\n Actual - {}".format(self.category_names[int(self.Y_test_vec[i,0])]),fontsize=1)
+            plt.title("Predicted - {}".format(self.category_names[np.argmax(predicted_classes[i], axis=0)]) + "\n Actual - {}".format(self.category_names[np.argmax(self.Y_test_vec[i,0])]),fontsize=1)
             plt.tight_layout()
             plt.savefig(self.graph_path + self.model_type + '_prediction' + str(self.number_classes) + '.png', dpi =500)
 
