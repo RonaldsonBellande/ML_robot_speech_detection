@@ -1,12 +1,11 @@
 from header_imports import *
 
-class speech_building(models):
-    def __init__(self, model_type):
+class model_building(models):
+    def __init__(self, model_type, data_type):
 
         self.label_name = []
-        self.mfcc_vectors = [] 
-        self.path  = "voice_data/"
-        self.true_path = self.path
+        self.mfcc_vectors = []
+        self.data_type = []
         self.channel = 1
         self.number_mfcc = 22050 
         self.mfcc_vectors = np.empty([320, 120, 100]) 
@@ -14,7 +13,6 @@ class speech_building(models):
         self.labelencoder = LabelEncoder()
         self.valid_sound = [".wav"]
         self.model = None
-
         self.model_summary = "model_summary/"
         self.optimizer = tf.keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
         self.create_model_type = model_type
@@ -36,6 +34,14 @@ class speech_building(models):
 
     def data_to_array_label_sound(self):
         
+        self.path  = "voice_data/"
+        if self.data_type == "commands":
+            self.true_path = self.path + "commands"
+        elif self.data_type == "utensils":
+            self.true_path = self.path + "utensils"
+        elif self.data_type == "fruits":
+            self.true_path = self.path + "fruits"
+
         self.category_names =  os.listdir(self.true_path)
         folder = next(os.walk(self.true_path))[1]
         self.number_classes = len(folder)

@@ -1,7 +1,7 @@
 from header_imports import *
 
 
-class speech_training(speech_building):
+class model_training(model_building):
     def __init__(self, model_type):
         super().__init__(model_type)
         
@@ -25,9 +25,7 @@ class speech_training(speech_building):
     def train_model(self):
        
         grid = GridSearchCV(estimator = self.model, param_grid = self.param_grid, n_jobs = 1, cv = 3, verbose = 10)
-        
         self.get_training_time("starting --: ")
-
         self.speech_model = self.model.fit(self.X_train, self.Y_train_vec,
                 batch_size=self.batch_size[2],
                 validation_split=0.10,
