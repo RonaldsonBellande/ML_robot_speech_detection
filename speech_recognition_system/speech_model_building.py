@@ -5,7 +5,7 @@ class model_building(models):
 
         self.label_name = []
         self.mfcc_vectors = []
-        self.data_type = []
+        self.data_type = data_type
         self.channel = 1
         self.number_mfcc = 22050 
         self.mfcc_vectors = np.empty([320, 120, 100]) 
