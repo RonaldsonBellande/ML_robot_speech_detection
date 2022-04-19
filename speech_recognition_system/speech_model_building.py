@@ -1,6 +1,6 @@
 from header_imports import *
 
-class speech_building(object):
+class speech_building(models):
     def __init__(self, model_type):
 
         self.label_name = []
@@ -23,18 +23,15 @@ class speech_building(object):
         self.splitting_data_normalize()
 
         if self.create_model_type == "model1":
-            self.create_models_1()
+            self.model = self.create_models_1()
         elif self.create_model_type == "model2":
-            self.create_models_2()
+            self.model = self.create_models_2()
         elif self.create_model_type == "model3":
-            self.create_model_3()
+            self.model = self.create_model_3()
         elif self.create_model_type == "model4":
-            self.create_models_4()
-        elif self.create_model_type == "model5":
-            self.create_model_5()
+            self.model = self.create_models_4()
 
         self.save_model_summary()
-        print("finished")
 
 
     def data_to_array_label_sound(self):
@@ -71,86 +68,6 @@ class speech_building(object):
         self.Y_train = tf.keras.utils.to_categorical(self.Y_train_vec, self.number_classes)
         self.Y_test = tf.keras.utils.to_categorical(self.Y_test_vec, self.number_classes)
     
-
-    def create_models_1(self):
-        
-        self.model = Sequential()
-        self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
-        self.model.add(Flatten())
-        self.model.add(Dense(self.number_classes, activation='softmax'))
-        self.model.compile(loss = 'binary_crossentropy', optimizer ='adam', metrics= ['accuracy'])
-
-        return self.model
-
-
-    def create_models_2(self):
-
-        self.model = Sequential()
-        self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu", input_shape = self.input_shape))
-        self.model.add(Conv2D(filters=32, kernel_size=(3,3), activation="relu"))
-        self.model.add(Dropout(rate=0.25))
-        self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
-        self.model.add(Conv2D(filters=64, kernel_size=(3, 3), activation="relu"))
-        self.model.add(Dropout(rate=0.25))
-        self.model.add(Flatten())
-        self.model.add(Dense(512, activation="relu"))
-        self.model.add(Dropout(rate=0.5))
-        self.model.add(Dense(units = self.number_classes, activation="softmax"))
-        self.model.compile(loss = 'binary_crossentropy', optimizer ='adam', metrics= ['accuracy'])
-	
-        return self.model
-
-
-    def create_model_3(self):
-
-        self.model = Sequential()
-        self.MyConv(first = True)
-        self.MyConv()
-        self.MyConv()
-        self.MyConv()
-        self.model.add(Flatten())
-        self.model.add(Dense(units = self.number_classes, activation = "softmax", input_dim=2))
-        self.model.compile(loss = "binary_crossentropy", optimizer ="adam", metrics= ["accuracy"])
-        
-        return self.model
-
-        
-
-    def MyConv(self, first = False):
-
-        if first == False:
-            self.model.add(Conv2D(filters=64, kernel_size=(4, 4),strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
-        else:
-            self.model.add(Conv2D(64,(4, 4), strides = (1,1), padding="same", input_shape = self.input_shape, activation="relu"))
-    
-        self.model.add(Dropout(0.5))
-        self.model.add(Conv2D(filters=32, kernel_size = (4, 4),strides = (1,1),padding="same"))
-        self.model.add(Activation("relu"))
-        self.model.add(Dropout(0.25))
-
-        
-
-    def create_models_4(self):
-        
-        self.model = Sequential()
-        self.model.add(LSTM(16, input_shape = self.input_shape, activation="sigmoid"))
-        self.model.add(Dense(1, activation='sigmoid'))
-        self.model.add(Dense(self.number_classes, activation='softmax'))
-        self.model.compile(loss = "binary_crossentropy", optimizer ="adam", metrics= ["accuracy"])
-
-        return self.model
-
-    
-    def create_model_5(self):
-        
-        self.model = Sequential()
-        self.model.add(Dense(32,activation='sigmoid', input_shape = (42, 11)))
-        self.model.add(Dropout(0.5))
-        self.model.add(Dense(3,activation='softmax'))
-        self.model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
-
-        return self.model
-
 
 
     def save_model_summary(self):

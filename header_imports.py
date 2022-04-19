@@ -82,9 +82,12 @@ else:
     device_name = "/device:CPU:0"
     print("CPU")
 
-from speech_model_building import *
-from speech_model_training import *
-from speech_model_transfer_learning import *
-from speech_model_classification import *
-from deep_learning_model import *
-from deep_q_learning import *
+
+from all_models import *
+from speech_recognition_system.speech_model_building import *
+from speech_recognition_system.speech_model_training import *
+from speech_recognition_system.speech_model_transfer_learning import *
+from speech_recognition_system.speech_model_classification import *
+from speech_recognition_system.speech_continuous_learning import *
+from speech_recognition_system.deep_learning_model import *
+from speech_recognition_system.deep_q_learning import *

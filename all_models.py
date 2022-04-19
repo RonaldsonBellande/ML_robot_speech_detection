@@ -64,3 +64,13 @@ class models(object):
         self.initial_model.add(Dropout(0.25))
 
 
+    def create_models_4(self):
+        
+        model = Sequential()
+        model.add(LSTM(16, input_shape = self.input_shape, activation="sigmoid"))
+        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(self.number_classes, activation='softmax'))
+        model.compile(loss = "binary_crossentropy", optimizer ="adam", metrics= ["accuracy"])
+
+        return model
+
