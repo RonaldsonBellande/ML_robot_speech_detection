@@ -88,6 +88,6 @@ from speech_recognition_system.speech_model_building import *
 from speech_recognition_system.speech_model_training import *
 from speech_recognition_system.speech_model_transfer_learning import *
 from speech_recognition_system.speech_model_classification import *
-from speech_recognition_system.speech_continuous_learning import *
 from speech_recognition_system.deep_learning_model import *
-from speech_recognition_system.deep_q_learning import *
+from speech_recognition_system.speech_enviroment import *
+from speech_recognition_system.speech_continuous_learning import *

@@ -56,42 +56,6 @@ class continuous_learning(deep_q_learning, classification_enviroment, plot_graph
 
     def setup_structure(self):
         
-        if self.number_classes == 2:
-            self.path  = "brain_cancer_category_2/"
-            if self.image_type == "normal":
-                self.true_path = self.path + "Additional_Data/"
-            elif self.image_type == "edge_1":
-                self.true_path = self.path + "brain_cancer_seperate_category_2_edge_1/"
-            elif self.image_type == "edge_2":
-                self.true_path = self.path + "brain_cancer_seperate_category_2_edge_2/"
-            
-            self.category_names =  os.listdir(self.true_path)
-            self.number_classes = len(next(os.walk(self.true_path))[1])
-            
-            for i in range(self.number_classes):
-                self.check_valid(self.category_names[i])
-
-            for i in range(self.number_classes):
-                self.resize_image_and_label_image(self.category_names[i])
-
-        elif self.number_classes == 4:
-            self.path = "brain_cancer_category_4/"
-            if self.image_type == "normal":
-                self.true_path = self.path + "Additional_Data/"
-            elif self.image_type == "edge_1":
-                self.true_path = self.path + "brain_cancer_seperate_category_4_edge_1/"
-            elif self.image_type == "edge_2":
-                self.true_path = self.path + "brain_cancer_seperate_category_4_edge_2/"
-            
-            self.category_names =  os.listdir(self.true_path)
-            self.number_classes = len(next(os.walk(self.true_path))[1])
-            
-            for i in range(self.number_classes):
-                self.check_valid(self.category_names[i])
-            
-            for i in range(self.number_classes):
-                self.resize_image_and_label_image(self.category_names[i])
-
         self.label_name = self.labelencoder.fit_transform(self.label_name)
         self.image_file = np.array(self.image_file)
         self.label_name = np.array(self.label_name)
