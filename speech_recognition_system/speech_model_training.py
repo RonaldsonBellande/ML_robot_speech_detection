@@ -29,7 +29,7 @@ class model_training(model_building):
         self.speech_model = self.model.fit(self.X_train, self.Y_train_vec,
                 batch_size=self.batch_size[2],
                 validation_split=0.10,
-                epochs=self.epochs[0],
+                epochs=self.epochs[3],
                 callbacks=[self.callback_1, self.callback_2, self.callback_3],
                 shuffle=True)
 

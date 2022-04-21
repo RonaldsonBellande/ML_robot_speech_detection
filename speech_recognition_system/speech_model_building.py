@@ -8,7 +8,6 @@ class model_building(models):
         self.data_type = data_type
         self.channel = 1
         self.number_mfcc = 22050 
-        # self.mfcc_vectors = np.empty([320, 120, 100]) 
         
         self.labelencoder = LabelEncoder()
         self.valid_sound = [".wav"]
@@ -50,11 +49,15 @@ class model_building(models):
             for wavfile in self.wav_files:
                 wave, sr = librosa.load(wavfile)
                 mfcc = librosa.feature.mfcc(wave, sr=sr, n_mfcc=self.number_mfcc)
-                self.mfcc_vectors.append(mfcc)
+                self.mfcc_vectors.append(np.array(mfcc))
                 self.label_name.append(label)
+        
+        # print(self.mfcc_vectors[0])
+        # print(self.mfcc_vectors[1])
 
-        print(self.mfcc_vectors.shape)
-
+        self.mfcc_vectors = np.array([np.array(self.mfcc_vectors[0]) for _ in self.mfcc_vectors])
+        # print(self.mfcc_vectors.shape)
+        
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
         else:
