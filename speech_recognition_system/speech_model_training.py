@@ -2,8 +2,8 @@ from header_imports import *
 
 
 class model_training(model_building):
-    def __init__(self, model_type):
-        super().__init__(model_type)
+    def __init__(self, model_type, data_type):
+        super().__init__(model_type, data_type)
         
         self.model_type = model_type
         self.number_images_to_plot = 25

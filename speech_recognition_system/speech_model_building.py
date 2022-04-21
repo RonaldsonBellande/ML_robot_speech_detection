@@ -8,7 +8,7 @@ class model_building(models):
         self.data_type = data_type
         self.channel = 1
         self.number_mfcc = 22050 
-        self.mfcc_vectors = np.empty([320, 120, 100]) 
+        # self.mfcc_vectors = np.empty([320, 120, 100]) 
         
         self.labelencoder = LabelEncoder()
         self.valid_sound = [".wav"]
@@ -36,25 +36,26 @@ class model_building(models):
         
         self.path  = "voice_data/"
         if self.data_type == "commands":
-            self.true_path = self.path + "commands"
+            self.true_path = self.path + "commands/"
         elif self.data_type == "utensils":
-            self.true_path = self.path + "utensils"
+            self.true_path = self.path + "utensils/"
         elif self.data_type == "fruits":
-            self.true_path = self.path + "fruits"
+            self.true_path = self.path + "fruits/"
 
         self.category_names =  os.listdir(self.true_path)
         folder = next(os.walk(self.true_path))[1]
         self.number_classes = len(folder)
         
         for label in self.category_names:
-            self.wav_files = [self.path + label + '/' + i for i in os.listdir(self.path + '/' + label)]
-
+            self.wav_files = [self.true_path + label + '/' + i for i in os.listdir(self.true_path + '/' + label)]
             for wavfile in self.wav_files:
                 wave, sr = librosa.load(wavfile)
                 mfcc = librosa.feature.mfcc(wave, sr=sr, n_mfcc=self.number_mfcc)
-                np.append(self.mfcc_vectors, mfcc)
+                print(np.array(mfcc).shape)
+                self.mfcc_vectors.append(mfcc)
                 self.label_name.append(label)
 
+        self.mfcc_vectors = np.array(self.mfcc_vectors)
 
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
