@@ -43,19 +43,17 @@ class model_building(models):
             self.true_path = self.path + "fruits/"
 
         self.category_names =  os.listdir(self.true_path)
-        folder = next(os.walk(self.true_path))[1]
-        self.number_classes = len(folder)
+        self.number_classes = len(next(os.walk(self.true_path))[1])
         
         for label in self.category_names:
             self.wav_files = [self.true_path + label + '/' + i for i in os.listdir(self.true_path + '/' + label)]
             for wavfile in self.wav_files:
                 wave, sr = librosa.load(wavfile)
                 mfcc = librosa.feature.mfcc(wave, sr=sr, n_mfcc=self.number_mfcc)
-                print(np.array(mfcc).shape)
                 self.mfcc_vectors.append(mfcc)
                 self.label_name.append(label)
 
-        self.mfcc_vectors = np.array(self.mfcc_vectors)
+        print(self.mfcc_vectors.shape)
 
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
