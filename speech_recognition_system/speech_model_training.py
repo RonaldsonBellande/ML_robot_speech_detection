@@ -9,7 +9,7 @@ class model_training(model_building):
         self.batch_size = [10, 20, 40, 60, 80, 100]
         self.epochs = [1, 5, 15, 50, 100, 200]
         self.graph_path = "graph_charts/"
-        self.model_path = "models/" 
+        self.model_path = "models/" + self.folder 
         self.param_grid = dict(batch_size=self.batch_size, epochs=self.epochs)
         self.callback_1 = TensorBoard(log_dir="logs/{}-{}".format(self.create_model_type, int(time.time())))
         self.callback_2 = ModelCheckpoint(filepath=self.model_path, save_weights_only=True, verbose=1)
@@ -34,7 +34,7 @@ class model_training(model_building):
                 shuffle=True)
 
         self.get_training_time("ending --: ")
-        self.model.save(self.model_path + self.folder + self.create_model_type + "_speech_categories_"+ str(self.number_classes)+"_model.h5")
+        self.model.save(self.model_path + self.create_model_type + "_speech_categories_"+ str(self.number_classes)+"_model.h5")
    
 
     def evaluate_model(self):
