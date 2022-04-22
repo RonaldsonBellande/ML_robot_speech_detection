@@ -35,11 +35,14 @@ class model_building(models):
         
         self.path  = "voice_data/"
         if self.data_type == "commands":
-            self.true_path = self.path + "commands/"
+            self.folder = "commands/" 
+            self.true_path = self.path + self.folder
         elif self.data_type == "utensils":
-            self.true_path = self.path + "utensils/"
+            self.folder =  "utensils/" 
+            self.true_path = self.path + self.folder
         elif self.data_type == "fruits":
-            self.true_path = self.path + "fruits/"
+            self.folder = "fruits/"
+            self.true_path = self.path + self.folder
 
         self.category_names =  os.listdir(self.true_path)
         self.number_classes = len(next(os.walk(self.true_path))[1])
@@ -52,11 +55,7 @@ class model_building(models):
                 self.mfcc_vectors.append(np.array(mfcc))
                 self.label_name.append(label)
         
-        # print(self.mfcc_vectors[0])
-        # print(self.mfcc_vectors[1])
-
         self.mfcc_vectors = np.array([np.array(self.mfcc_vectors[0]) for _ in self.mfcc_vectors])
-        # print(self.mfcc_vectors.shape)
         
         if self.create_model_type == "model4":
             self.mfcc_vectors =  self.mfcc_vectors.reshape(self.mfcc_vectors.shape[0], self.mfcc_vectors.shape[1], self.mfcc_vectors.shape[2])
@@ -79,7 +78,7 @@ class model_building(models):
 
 
     def save_model_summary(self):
-        with open(self.model_summary + self.create_model_type +"_summary_architecture_" + str(self.number_classes) +".txt", "w+") as model:
+        with open(self.model_summary + self.create_model_type +"_summary_architecture" +".txt", "w+") as model:
             with redirect_stdout(model):
                 self.model.summary()
 
