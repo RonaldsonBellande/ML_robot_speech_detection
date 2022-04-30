@@ -78,7 +78,7 @@ class model_training(model_building):
         for i in range(self.number_images_to_plot):
             plt.subplot(5,5,i+1)
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.category_names[np.argmax(predicted_classes[i], axis=0)]) + "\n Actual - {}".format(self.category_names[np.argmax(self.Y_test_vec[i,0])]),fontsize=1)
+            plt.title("Predicted - {}".format(self.category_names[np.argmax(predicted_classes[i], axis=0)]) + "\n Actual - {}".format(self.category_names[np.argmax(self.Y_test_vec[i,0])]),fontsize=5)
             plt.tight_layout()
             plt.savefig(self.graph_path + self.folder + self.create_model_type + '_prediction' + str(self.number_classes) + '.png', dpi =500)
 

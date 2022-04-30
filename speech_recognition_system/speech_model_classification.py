@@ -15,15 +15,10 @@ class classification_with_model(object):
 
         self.graph_path = "graph_charts/" + "prediction_with_model_saved/"
 
-        if self.number_classes == 2:
-            self.number_images_to_plot = 9
-            self.model_categpory = ["False","True"]
-            self.image_path = "brain_cancer_category_2/" + "Testing" 
-       
-        elif self.number_classes == 4:
-            self.number_images_to_plot = 16
-            self.model_categpory = ["False", "glioma_tumor", "meningioma_tumor", "pituitary_tumor"]
-            self.image_path = "brain_cancer_category_4/" + "Testing" 
+        self.number_images_to_plot = 9
+        self.model_categpory = ["False","True"]
+        self.image_path = "brain_cancer_category_2/" + "Testing" 
+      
 
         self.prepare_image_data()
         self.plot_prediction_with_model()
@@ -50,7 +45,7 @@ class classification_with_model(object):
             plt.subplot(math.sqrt(self.number_images_to_plot),math.sqrt(self.number_images_to_plot),i+1)
             fig=plt.imshow(self.X_test[i,:,:,:])
             plt.axis('off')
-            plt.title("Predicted - {}".format(self.model_categpory[np.argmax(predicted_classes[i], axis=0)]), fontsize=1)
+            plt.title("Predicted - {}".format(self.model_categpory[np.argmax(predicted_classes[i], axis=0)]), fontsize=5)
             plt.tight_layout()
             plt.savefig(self.graph_path + "model_classification_detection_with_model_trained_prediction_" + str(self.save_model) + '.png')
 
