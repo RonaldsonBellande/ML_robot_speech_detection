@@ -43,6 +43,9 @@ class model_building(models):
         elif self.data_type == "fruits":
             self.folder = "fruits/"
             self.true_path = self.path + self.folder
+        elif self.data_type == "objects":
+            self.folder = "objects/"
+            self.true_path = self.path + self.folder
 
         self.category_names =  os.listdir(self.true_path)
         self.number_classes = len(next(os.walk(self.true_path))[1])
